@@ -22,13 +22,17 @@
       name: text.trim(),
       added_by: currentProfile.id,
       is_done: false,
-      is_action: isAction
+      is_action: isAction,
+      photo_url: null
     });
 
     if (!error) {
       text = '';
       isAction = false;
       onAdded();
+    } else {
+      console.error(error);
+      alert("Er ging iets mis bij het toevoegen.");
     }
     isLoading = false;
   }
@@ -45,7 +49,7 @@
     const target = event.target as HTMLInputElement;
     if (!target.files || target.files.length === 0) return;
 
-    isPhotoModalOpen = false; // sluit modal als het open is
+    isPhotoModalOpen = false;
     const file = target.files[0];
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
@@ -53,7 +57,6 @@
 
     isLoading = true;
     
-    // Upload image to Supabase storage
     const { error: uploadError } = await supabase.storage.from('product-photos').upload(filePath, file);
 
     if (uploadError) {
@@ -63,7 +66,6 @@
       return;
     }
 
-    // Insert item with photo
     const { data: publicUrlData } = supabase.storage.from('product-photos').getPublicUrl(filePath);
 
     const { error: dbError } = await supabase.from('groceries').insert({
@@ -78,6 +80,9 @@
       text = '';
       isAction = false;
       onAdded();
+    } else {
+      console.error(dbError);
+      alert("Er ging iets mis bij het toevoegen van het artikel met foto.");
     }
     
     target.value = '';
