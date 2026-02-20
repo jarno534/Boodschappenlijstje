@@ -103,12 +103,18 @@
       </div>
 
       {#if item.photo_url}
-        <button type="button" class="shrink-0 group relative p-0 border-0 bg-transparent" on:click|stopPropagation={() => fullscreenPhotoUrl = item.photo_url}>
+        <div 
+          class="shrink-0 group relative p-0 border-0 bg-transparent cursor-pointer" 
+          on:click|stopPropagation={() => fullscreenPhotoUrl = item.photo_url}
+          on:keydown={(e) => e.key === 'Enter' && (fullscreenPhotoUrl = item.photo_url)}
+          role="button"
+          tabindex="0"
+        >
           <img src={item.photo_url} alt={item.name} class="w-12 h-12 object-cover rounded-xl border border-gray-100 shadow-sm" />
           <div class="absolute inset-0 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <Camera size={16} class="text-white" />
           </div>
-        </button>
+        </div>
       {/if}
     </button>
   {/each}

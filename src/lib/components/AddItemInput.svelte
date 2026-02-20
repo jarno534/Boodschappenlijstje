@@ -1,5 +1,7 @@
+<script lang="ts">
   import { Camera, RefreshCw, Tag } from 'lucide-svelte';
-  import { supabase, type Profile } from '$lib/supabase';
+  import { supabase } from '$lib/supabase';
+  import type { Profile } from '$lib/supabase';
   import PhotoSourceModal from './PhotoSourceModal.svelte';
 
   export let currentProfile: Profile;
