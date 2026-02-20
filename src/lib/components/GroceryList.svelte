@@ -10,6 +10,7 @@
 
   let allSelected = false;
   let fullscreenPhotoUrl: string | null = null;
+  let isDeleteDialogOpen = false;
 
   function toggleSelectAll() {
     allSelected = !allSelected;
@@ -33,8 +34,8 @@
     }
   }
 
-  async function deleteSelected() {
-    if (!confirm('Weet je zeker dat je de geselecteerde artikelen wilt verwijderen?')) return;
+  async function executeDelete() {
+    isDeleteDialogOpen = false;
     const toDelete = groceries.filter(g => g.is_done).map(g => g.id);
     if (toDelete.length > 0) {
       await supabase.from('groceries').delete().in('id', toDelete);
@@ -61,7 +62,7 @@
   </button>
   
   <button 
-    on:click={deleteSelected}
+    on:click={() => isDeleteDialogOpen = true}
     class="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50"
     disabled={!groceries.some(g => g.is_done)}
   >
@@ -78,7 +79,7 @@
 
   {#each groceries as item (item.id)}
     <button 
-      class="w-full flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border-l-8 text-left transition-all hover:bg-gray-50 active:scale-[0.98] {item.is_done ? 'opacity-60' : ''}"
+      class="w-full flex items-center gap-4 p-4 {item.is_action ? 'bg-red-50/40' : 'bg-white'} rounded-2xl shadow-sm border-l-8 text-left transition-all hover:bg-gray-50 active:scale-[0.98] {item.is_done ? 'opacity-60' : ''}"
       style="border-color: {getProfileColor(item.added_by)}"
       on:click={() => toggleStatus(item)}
     >
@@ -91,6 +92,9 @@
 
       <div class="flex-1 min-w-0">
         <span class="block text-lg font-medium break-words {item.is_done ? 'text-gray-400 line-through decoration-red-500 decoration-4' : 'text-gray-900'}">
+          {#if item.is_action}
+            <span class="inline-block bg-red-100 text-red-600 text-[10px] font-bold px-2 py-0.5 rounded-md mr-1 align-text-bottom uppercase tracking-wider">Actie</span>
+          {/if}
           {item.name}
         </span>
         <div class="flex items-center gap-1 text-xs text-gray-400 mt-1">
@@ -121,4 +125,31 @@
       <X size={28} />
     </div>
   </button>
+{/if}
+
+{#if isDeleteDialogOpen}
+  <div class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-center">
+      <div class="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center text-red-500 mb-4">
+        <Trash2 size={32} />
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 mb-2">Artikelen verwijderen</h3>
+      <p class="text-gray-500 mb-8">Weet je zeker dat je alle geselecteerde artikelen wilt weggooien? Dit kan niet ongedaan worden gemaakt.</p>
+      
+      <div class="grid grid-cols-2 gap-3">
+        <button 
+          class="p-4 bg-gray-100 hover:bg-gray-200 rounded-2xl font-bold text-gray-700 transition-colors"
+          on:click={() => isDeleteDialogOpen = false}
+        >
+          Annuleren
+        </button>
+        <button 
+          class="p-4 bg-red-500 hover:bg-red-600 rounded-2xl font-bold text-white transition-colors"
+          on:click={executeDelete}
+        >
+          Verwijderen
+        </button>
+      </div>
+    </div>
+  </div>
 {/if}

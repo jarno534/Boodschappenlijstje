@@ -17,6 +17,7 @@ export type Grocery = {
     id: string;
     name: string;
     added_by: string;
+    is_action: boolean;
     is_done: boolean;
     photo_url: string | null;
     created_at: string;

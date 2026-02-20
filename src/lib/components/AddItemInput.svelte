@@ -1,5 +1,4 @@
-<script lang="ts">
-  import { Camera, RefreshCw } from 'lucide-svelte';
+  import { Camera, RefreshCw, Tag } from 'lucide-svelte';
   import { supabase, type Profile } from '$lib/supabase';
   import PhotoSourceModal from './PhotoSourceModal.svelte';
 
@@ -11,6 +10,7 @@
   let fileInputGeneral: HTMLInputElement;
   let fileInputCamera: HTMLInputElement;
   let isPhotoModalOpen = false;
+  let isAction = false;
 
   async function handleSubmit() {
     if (!text.trim()) return;
@@ -20,10 +20,12 @@
       name: text.trim(),
       added_by: currentProfile.id,
       is_done: false,
+      is_action: isAction
     });
 
     if (!error) {
       text = '';
+      isAction = false;
       onAdded();
     }
     isLoading = false;
@@ -66,11 +68,13 @@
       name: text.trim(),
       added_by: currentProfile.id,
       is_done: false,
+      is_action: isAction,
       photo_url: publicUrlData.publicUrl
     });
 
     if (!dbError) {
       text = '';
+      isAction = false;
       onAdded();
     }
     
@@ -79,43 +83,54 @@
   }
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="w-full flex items-center gap-2 mb-6" style="--profile-color: {currentProfile.color}">
-  <div class="relative flex-1">
-    <input
-      type="text"
-      placeholder="Wat wil je toevoegen?"
-      bind:value={text}
-      disabled={isLoading}
-      class="w-full pl-5 pr-12 py-4 bg-white shadow-sm border-2 rounded-2xl focus:outline-none transition-colors text-lg"
-      style={`border-color: ${currentProfile.color}33`}
-      on:focus={(e) => (e.currentTarget.style.borderColor = currentProfile.color)}
-      on:blur={(e) => {
-        if (!e.currentTarget.value) e.currentTarget.style.borderColor = `${currentProfile.color}33`;
-      }}
-    />
-    
-    <button 
-      type="button"
-      class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 transition-colors" 
-      style={isLoading ? 'pointer-events: none; opacity: 0.5' : ''}
-      on:click={handleCameraClick}
-    >
-      <Camera size={24} />
-    </button>
-  </div>
+<form on:submit|preventDefault={handleSubmit} class="w-full flex flex-col gap-3 mb-6" style="--profile-color: {currentProfile.color}">
+  <input
+    type="text"
+    placeholder="Wat wil je toevoegen?"
+    bind:value={text}
+    disabled={isLoading}
+    class="w-full px-5 py-4 bg-white shadow-sm border-2 rounded-2xl focus:outline-none transition-colors text-lg font-medium"
+    style={`border-color: ${currentProfile.color}33`}
+    on:focus={(e) => (e.currentTarget.style.borderColor = currentProfile.color)}
+    on:blur={(e) => {
+      if (!e.currentTarget.value) e.currentTarget.style.borderColor = `${currentProfile.color}33`;
+    }}
+  />
   
-  <button 
-    type="submit" 
-    disabled={!text.trim() || isLoading}
-    class="p-4 rounded-2xl text-white shadow-sm disabled:opacity-50 transition-transform active:scale-95 flex items-center justify-center min-w-[64px]"
-    style="background-color: {currentProfile.color}"
-  >
-    {#if isLoading}
-      <RefreshCw size={24} class="animate-spin" />
-    {:else}
-      Voeg toe
-    {/if}
-  </button>
+  <div class="flex items-center justify-between w-full">
+    <label 
+      class="flex items-center gap-2 cursor-pointer bg-white px-4 py-3.5 rounded-2xl border-2 transition-colors shadow-sm select-none" 
+      style={isAction ? 'border-color: #ef4444; background-color: #fef2f2; color: #dc2626;' : 'border-color: #f3f4f6; color: #6b7280;'}
+    >
+      <input type="checkbox" bind:checked={isAction} class="hidden" />
+      <Tag size={20} class={isAction ? 'fill-red-100' : ''} />
+      <span class="font-bold">Actie</span>
+    </label>
+
+    <div class="flex items-center gap-2">
+      <button 
+        type="button"
+        class="p-4 bg-white rounded-2xl shadow-sm transition-colors border-2" 
+        style={isLoading ? 'pointer-events: none; opacity: 0.5' : `border-color: ${currentProfile.color}33; color: ${currentProfile.color}`}
+        on:click={handleCameraClick}
+      >
+        <Camera size={24} />
+      </button>
+      
+      <button 
+        type="submit" 
+        disabled={!text.trim() || isLoading}
+        class="p-4 px-6 rounded-2xl text-white shadow-sm disabled:opacity-50 transition-transform active:scale-95 flex items-center justify-center min-w-[100px] font-bold text-lg"
+        style="background-color: {currentProfile.color}"
+      >
+        {#if isLoading}
+          <RefreshCw size={24} class="animate-spin" />
+        {:else}
+          Voeg toe
+        {/if}
+      </button>
+    </div>
+  </div>
 </form>
 
 <!-- Use separate inputs to trigger different native behaviors (gallery vs camera app on mobile) -->
