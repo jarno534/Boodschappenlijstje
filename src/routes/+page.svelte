@@ -89,7 +89,7 @@
       class="sticky top-0 z-10 px-4 py-4 backdrop-blur-md border-b flex justify-between items-center transition-colors"
       style={`background-color: ${currentProfile.color}11; border-color: ${currentProfile.color}33`}
     >
-      <div class="flex items-center gap-3">
+      <button class="flex items-center gap-3 text-left hover:opacity-80 transition-opacity" on:click={handleLogout}>
         <div 
           class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-sm"
           style="background-color: {currentProfile.color}"
@@ -98,24 +98,9 @@
         </div>
         <div>
           <h1 class="font-bold text-gray-900 leading-tight">Boodschappen</h1>
-          <p class="text-xs text-gray-500">Ingelogd als {currentProfile.name}</p>
+          <p class="text-xs text-blue-600 font-medium">Klik om profiel te wisselen</p>
         </div>
-      </div>
-      
-      <div class="flex items-center gap-2">
-        <button 
-          class="p-2 text-gray-500 hover:text-gray-900 bg-white rounded-full shadow-sm"
-          on:click={() => isSettingsOpen = true}
-        >
-          <Settings size={20} />
-        </button>
-        <button 
-          class="p-2 text-red-500 hover:text-red-700 bg-white rounded-full shadow-sm"
-          on:click={handleLogout}
-        >
-          <LogOut size={20} />
-        </button>
-      </div>
+      </button>
     </header>
 
     <!-- Main Content -->

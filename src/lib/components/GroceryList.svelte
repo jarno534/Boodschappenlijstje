@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Grocery, Profile } from '$lib/supabase';
   import { supabase } from '$lib/supabase';
-  import { Check, Trash2, Camera, User } from 'lucide-svelte';
+  import { Check, Trash2, Camera, User, X } from 'lucide-svelte';
 
   export let groceries: Grocery[] = [];
   export let profiles: Profile[] = [];
@@ -9,6 +9,7 @@
   export let currentProfile: Profile;
 
   let allSelected = false;
+  let fullscreenPhotoUrl: string | null = null;
 
   function toggleSelectAll() {
     allSelected = !allSelected;
@@ -33,6 +34,7 @@
   }
 
   async function deleteSelected() {
+    if (!confirm('Weet je zeker dat je de geselecteerde artikelen wilt verwijderen?')) return;
     const toDelete = groceries.filter(g => g.is_done).map(g => g.id);
     if (toDelete.length > 0) {
       await supabase.from('groceries').delete().in('id', toDelete);
@@ -88,7 +90,7 @@
       </div>
 
       <div class="flex-1 min-w-0">
-        <span class="block text-lg font-medium text-gray-900 break-words {item.is_done ? 'line-through decoration-2 decoration-gray-400' : ''}">
+        <span class="block text-lg font-medium break-words {item.is_done ? 'text-gray-400 line-through decoration-red-500 decoration-4' : 'text-gray-900'}">
           {item.name}
         </span>
         <div class="flex items-center gap-1 text-xs text-gray-400 mt-1">
@@ -97,13 +99,26 @@
       </div>
 
       {#if item.photo_url}
-        <div class="shrink-0 group relative">
-          <img src={item.photo_url} alt={item.name} class="w-12 h-12 object-cover rounded-xl border border-gray-100" />
+        <button type="button" class="shrink-0 group relative p-0 border-0 bg-transparent" on:click|stopPropagation={() => fullscreenPhotoUrl = item.photo_url}>
+          <img src={item.photo_url} alt={item.name} class="w-12 h-12 object-cover rounded-xl border border-gray-100 shadow-sm" />
           <div class="absolute inset-0 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <Camera size={16} class="text-white" />
           </div>
-        </div>
+        </button>
       {/if}
     </button>
   {/each}
 </div>
+
+{#if fullscreenPhotoUrl}
+  <button 
+    type="button"
+    class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 border-0" 
+    on:click={() => fullscreenPhotoUrl = null}
+  >
+    <img src={fullscreenPhotoUrl} alt="Vergrote foto" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
+    <div class="absolute top-6 right-6 p-3 text-white bg-black/50 rounded-full hover:bg-black/80 transition-colors">
+      <X size={28} />
+    </div>
+  </button>
+{/if}
