@@ -1,19 +1,22 @@
 <script lang="ts">
-  import { Camera, RefreshCw, X } from 'lucide-svelte';
+  import { Camera, RefreshCw } from 'lucide-svelte';
   import { supabase, type Profile } from '$lib/supabase';
+  import PhotoSourceModal from './PhotoSourceModal.svelte';
 
   export let currentProfile: Profile;
   export let onAdded: () => void;
 
   let text = '';
   let isLoading = false;
-  let fileInput: HTMLInputElement;
+  let fileInputGeneral: HTMLInputElement;
+  let fileInputCamera: HTMLInputElement;
+  let isPhotoModalOpen = false;
 
   async function handleSubmit() {
     if (!text.trim()) return;
     
     isLoading = true;
-    const { data, error } = await supabase.from('groceries').insert({
+    const { error } = await supabase.from('groceries').insert({
       name: text.trim(),
       added_by: currentProfile.id,
       is_done: false,
@@ -26,16 +29,19 @@
     isLoading = false;
   }
 
+  function handleCameraClick() {
+    if (!text.trim()) {
+      alert("Typ eerst de naam van het artikel voordat je een foto toevoegt.");
+      return;
+    }
+    isPhotoModalOpen = true;
+  }
+
   async function handleFileUpload(event: Event) {
     const target = event.target as HTMLInputElement;
     if (!target.files || target.files.length === 0) return;
 
-    if (!text.trim()) {
-      alert("Typ eerst de naam van het artikel voordat je een foto toevoegt.");
-      target.value = '';
-      return;
-    }
-
+    isPhotoModalOpen = false; // sluit modal als het open is
     const file = target.files[0];
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
@@ -88,16 +94,14 @@
       }}
     />
     
-    <label class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" style={isLoading ? 'pointer-events: none; opacity: 0.5' : ''}>
+    <button 
+      type="button"
+      class="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 transition-colors" 
+      style={isLoading ? 'pointer-events: none; opacity: 0.5' : ''}
+      on:click={handleCameraClick}
+    >
       <Camera size={24} />
-      <input 
-        type="file" 
-        accept="image/*" 
-        class="hidden" 
-        bind:this={fileInput}
-        on:change={handleFileUpload}
-      />
-    </label>
+    </button>
   </div>
   
   <button 
@@ -113,3 +117,29 @@
     {/if}
   </button>
 </form>
+
+<!-- Use separate inputs to trigger different native behaviors (gallery vs camera app on mobile) -->
+<input 
+  type="file" 
+  accept="image/*" 
+  class="hidden" 
+  bind:this={fileInputGeneral}
+  on:change={handleFileUpload}
+/>
+
+<input 
+  type="file" 
+  accept="image/*" 
+  capture="environment"
+  class="hidden" 
+  bind:this={fileInputCamera}
+  on:change={handleFileUpload}
+/>
+
+{#if isPhotoModalOpen}
+  <PhotoSourceModal 
+    onClose={() => isPhotoModalOpen = false} 
+    onSelectLibrary={() => { isPhotoModalOpen = false; fileInputGeneral.click(); }}
+    onSelectCamera={() => { isPhotoModalOpen = false; fileInputCamera.click(); }}
+  />
+{/if}
