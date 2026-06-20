@@ -122,34 +122,31 @@
   />
 
   <div class="flex items-center justify-between w-full">
-    <!-- Action Checkbox Button -->
+    <!-- Action Checkbox Button (Icon Only) -->
     <label 
-      class="flex items-center gap-2 cursor-pointer bg-white px-4 py-3.5 rounded-2xl border-2 transition-colors shadow-sm select-none text-sm" 
+      class="flex items-center justify-center cursor-pointer bg-white p-3.5 rounded-2xl border-2 transition-colors shadow-sm select-none shrink-0" 
       style={isAction ? 'border-color: #ef4444; background-color: #fef2f2; color: #dc2626;' : 'border-color: #f3f4f6; color: #6b7280;'}
     >
       <input type="checkbox" bind:checked={isAction} class="hidden" />
-      <Tag size={18} class={isAction ? 'fill-red-100' : ''} />
-      <span class="font-bold">Actie</span>
+      <Tag size={20} class={isAction ? 'fill-red-100' : ''} />
     </label>
 
     <!-- Dropdown, Camera & Submit Button Row -->
     <div class="flex items-center gap-1.5">
-      <!-- Store Dropdown Selector -->
+      <!-- Store Dropdown Selector (Icon + ▼, Name hidden) -->
       <div class="relative">
         <button
           type="button"
           on:click={toggleStoreDropdown}
-          class="flex items-center gap-1.5 bg-white px-3 py-3.5 rounded-2xl border-2 transition-all shadow-sm text-sm font-bold text-gray-500 whitespace-nowrap"
-          style={selectedStore ? `border-color: ${currentProfile.color}; color: ${currentProfile.color}; background-color: ${currentProfile.color}08;` : 'border-color: #f3f4f6;'}
+          class="flex items-center gap-1 bg-white p-3.5 rounded-2xl border-2 transition-all shadow-sm shrink-0"
+          style={selectedStore ? `border-color: ${currentProfile.color}; background-color: ${currentProfile.color}08;` : 'border-color: #f3f4f6;'}
         >
           {#if selectedStore}
             <StoreLogo store={selectedStore} class="w-5 h-5 rounded-md shadow-sm shrink-0" />
-            <span class="truncate max-w-[70px]">{selectedStore}</span>
           {:else}
-            <Store size={18} class="shrink-0 text-gray-400" />
-            <span>Winkel</span>
+            <Store size={20} class="shrink-0 text-gray-400" />
           {/if}
-          <span class="text-[10px] text-gray-400">▼</span>
+          <span class="text-[10px] text-gray-400 ml-0.5">▼</span>
         </button>
 
         {#if isStoreDropdownOpen}
@@ -160,7 +157,7 @@
             aria-label="Sluit menu"
           ></button>
           
-          <div class="absolute top-full right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div class="absolute bottom-full right-0 mb-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 animate-in fade-in slide-in-from-bottom-2 duration-150">
             <button
               type="button"
               on:click={() => selectStore('')}
