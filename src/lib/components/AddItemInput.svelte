@@ -121,97 +121,97 @@
     }}
   />
 
-  <!-- Store Dropdown -->
-  <div class="relative w-full">
-    <button
-      type="button"
-      on:click={toggleStoreDropdown}
-      class="w-full flex items-center justify-between px-5 py-4 bg-white shadow-sm border-2 rounded-2xl hover:bg-gray-50 transition-all text-base font-medium text-left"
-      style={`border-color: ${currentProfile.color}33`}
-    >
-      <div class="flex items-center gap-3">
-        {#if selectedStore}
-          <StoreLogo store={selectedStore} class="w-6 h-6 rounded-md shadow-sm shrink-0" />
-          <span class="text-gray-950 font-semibold">{selectedStore}</span>
-        {:else}
-          <Store class="text-gray-400 shrink-0" size={20} />
-          <span class="text-gray-400">Kies een winkel (optioneel)</span>
-        {/if}
-      </div>
-      <span class="text-gray-400 text-xs transition-transform duration-200 {isStoreDropdownOpen ? 'rotate-180' : ''}">
-        ▼
-      </span>
-    </button>
-
-    {#if isStoreDropdownOpen}
-      <button 
-        type="button"
-        class="fixed inset-0 z-20 bg-transparent cursor-default w-full h-full border-0 p-0" 
-        on:click={() => isStoreDropdownOpen = false}
-        aria-label="Sluit menu"
-      ></button>
-      
-      <div class="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-150">
-        <button
-          type="button"
-          on:click={() => selectStore('')}
-          class="w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-gray-50 transition-colors text-sm font-semibold text-red-500"
-        >
-          <div class="w-6 h-6 rounded-md bg-red-50 flex items-center justify-center shrink-0">
-            <X size={14} />
-          </div>
-          Geen specifieke winkel
-        </button>
-        
-        <div class="h-px bg-gray-100 my-1"></div>
-
-        {#each stores as storeOption}
-          <button
-            type="button"
-            on:click={() => selectStore(storeOption)}
-            class="w-full flex items-center justify-between px-5 py-3 text-left hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-700 {selectedStore === storeOption ? 'bg-gray-50' : ''}"
-          >
-            <div class="flex items-center gap-3">
-              <StoreLogo store={storeOption} class="w-6 h-6 rounded-md shadow-sm shrink-0" />
-              <span>{storeOption}</span>
-            </div>
-            {#if selectedStore === storeOption}
-              <span class="w-2 h-2 rounded-full" style="background-color: {currentProfile.color}"></span>
-            {/if}
-          </button>
-        {/each}
-      </div>
-    {/if}
-  </div>
-  
   <div class="flex items-center justify-between w-full">
+    <!-- Action Checkbox Button -->
     <label 
-      class="flex items-center gap-2 cursor-pointer bg-white px-4 py-3.5 rounded-2xl border-2 transition-colors shadow-sm select-none" 
+      class="flex items-center gap-2 cursor-pointer bg-white px-4 py-3.5 rounded-2xl border-2 transition-colors shadow-sm select-none text-sm" 
       style={isAction ? 'border-color: #ef4444; background-color: #fef2f2; color: #dc2626;' : 'border-color: #f3f4f6; color: #6b7280;'}
     >
       <input type="checkbox" bind:checked={isAction} class="hidden" />
-      <Tag size={20} class={isAction ? 'fill-red-100' : ''} />
+      <Tag size={18} class={isAction ? 'fill-red-100' : ''} />
       <span class="font-bold">Actie</span>
     </label>
 
-    <div class="flex items-center gap-2">
+    <!-- Dropdown, Camera & Submit Button Row -->
+    <div class="flex items-center gap-1.5">
+      <!-- Store Dropdown Selector -->
+      <div class="relative">
+        <button
+          type="button"
+          on:click={toggleStoreDropdown}
+          class="flex items-center gap-1.5 bg-white px-3 py-3.5 rounded-2xl border-2 transition-all shadow-sm text-sm font-bold text-gray-500 whitespace-nowrap"
+          style={selectedStore ? `border-color: ${currentProfile.color}; color: ${currentProfile.color}; background-color: ${currentProfile.color}08;` : 'border-color: #f3f4f6;'}
+        >
+          {#if selectedStore}
+            <StoreLogo store={selectedStore} class="w-5 h-5 rounded-md shadow-sm shrink-0" />
+            <span class="truncate max-w-[70px]">{selectedStore}</span>
+          {:else}
+            <Store size={18} class="shrink-0 text-gray-400" />
+            <span>Winkel</span>
+          {/if}
+          <span class="text-[10px] text-gray-400">▼</span>
+        </button>
+
+        {#if isStoreDropdownOpen}
+          <button 
+            type="button"
+            class="fixed inset-0 z-20 bg-transparent cursor-default w-full h-full border-0 p-0" 
+            on:click={() => isStoreDropdownOpen = false}
+            aria-label="Sluit menu"
+          ></button>
+          
+          <div class="absolute bottom-full right-0 mb-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-150">
+            <button
+              type="button"
+              on:click={() => selectStore('')}
+              class="w-full flex items-center gap-3 px-5 py-2.5 text-left hover:bg-gray-50 transition-colors text-sm font-semibold text-red-500"
+            >
+              <div class="w-6 h-6 rounded-md bg-red-50 flex items-center justify-center shrink-0">
+                <X size={14} />
+              </div>
+              Geen winkel
+            </button>
+            
+            <div class="h-px bg-gray-100 my-1"></div>
+
+            {#each stores as storeOption}
+              <button
+                type="button"
+                on:click={() => selectStore(storeOption)}
+                class="w-full flex items-center justify-between px-5 py-2.5 text-left hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-700 {selectedStore === storeOption ? 'bg-gray-50' : ''}"
+              >
+                <div class="flex items-center gap-3">
+                  <StoreLogo store={storeOption} class="w-6 h-6 rounded-md shadow-sm shrink-0" />
+                  <span>{storeOption}</span>
+                </div>
+                {#if selectedStore === storeOption}
+                  <span class="w-2 h-2 rounded-full" style="background-color: {currentProfile.color}"></span>
+                {/if}
+              </button>
+            {/each}
+          </div>
+        {/if}
+      </div>
+
+      <!-- Camera button -->
       <button 
         type="button"
-        class="p-4 bg-white rounded-2xl shadow-sm transition-colors border-2" 
-        style={isLoading ? 'pointer-events: none; opacity: 0.5' : `border-color: ${currentProfile.color}33; color: ${currentProfile.color}`}
+        class="p-3.5 bg-white rounded-2xl shadow-sm transition-colors border-2 text-gray-500 hover:text-gray-900 shrink-0" 
+        style={isLoading ? 'pointer-events: none; opacity: 0.5' : `border-color: #f3f4f6;`}
         on:click={handleCameraClick}
       >
-        <Camera size={24} />
+        <Camera size={20} />
       </button>
-      
+
+      <!-- Submit button -->
       <button 
         type="submit" 
         disabled={!text.trim() || isLoading}
-        class="p-4 px-6 rounded-2xl text-white shadow-sm disabled:opacity-50 transition-transform active:scale-95 flex items-center justify-center min-w-[100px] font-bold text-lg"
+        class="p-3.5 px-5 rounded-2xl text-white shadow-sm disabled:opacity-50 transition-transform active:scale-95 flex items-center justify-center font-bold text-base shrink-0"
         style="background-color: {currentProfile.color}"
       >
         {#if isLoading}
-          <RefreshCw size={24} class="animate-spin" />
+          <RefreshCw size={20} class="animate-spin" />
         {:else}
           Voeg toe
         {/if}
