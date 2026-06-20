@@ -157,7 +157,7 @@
             aria-label="Sluit menu"
           ></button>
           
-          <div class="absolute bottom-full right-0 mb-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <div class="absolute top-full right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 animate-in fade-in slide-in-from-top-2 duration-150">
             <button
               type="button"
               on:click={() => selectStore('')}
