@@ -20,5 +20,6 @@ export type Grocery = {
     is_action: boolean;
     is_done: boolean;
     photo_url: string | null;
+    store: string | null;
     created_at: string;
 };

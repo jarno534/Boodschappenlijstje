@@ -2,6 +2,7 @@
   import type { Grocery, Profile } from '$lib/supabase';
   import { supabase } from '$lib/supabase';
   import { Check, Trash2, Camera, User, X } from 'lucide-svelte';
+  import StoreLogo from './StoreLogo.svelte';
 
   export let groceries: Grocery[] = [];
   export let profiles: Profile[] = [];
@@ -89,6 +90,10 @@
       >
         <Check size={14} class="stroke-[3]" />
       </div>
+
+      {#if item.store}
+        <StoreLogo store={item.store} class="w-9 h-9 rounded-xl shadow-sm shrink-0 border border-gray-100" />
+      {/if}
 
       <div class="flex-1 min-w-0">
         <span class="block text-lg font-medium break-words {item.is_done ? 'text-gray-400 line-through decoration-red-500 decoration-4' : 'text-gray-900'}">

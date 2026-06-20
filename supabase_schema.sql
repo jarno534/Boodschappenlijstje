@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.groceries (
   added_by UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
   is_done BOOLEAN DEFAULT false,
   photo_url TEXT,
+  store TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
