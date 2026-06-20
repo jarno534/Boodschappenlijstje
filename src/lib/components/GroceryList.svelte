@@ -92,7 +92,7 @@
       </div>
 
       {#if item.store}
-        <StoreLogo store={item.store} class="h-9 w-auto max-w-[64px] rounded-xl shadow-sm shrink-0 border border-gray-100" />
+        <StoreLogo store={item.store} class="w-9 h-9 rounded-xl shadow-sm shrink-0 border border-gray-100" />
       {/if}
 
       <div class="flex-1 min-w-0">

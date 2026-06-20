@@ -143,7 +143,7 @@
           style={selectedStore ? `border-color: ${currentProfile.color}; color: ${currentProfile.color}; background-color: ${currentProfile.color}08;` : 'border-color: #f3f4f6;'}
         >
           {#if selectedStore}
-            <StoreLogo store={selectedStore} class="h-5 w-auto max-w-[48px] rounded-md shadow-sm shrink-0" />
+            <StoreLogo store={selectedStore} class="w-5 h-5 rounded-md shadow-sm shrink-0" />
             <span class="truncate max-w-[70px]">{selectedStore}</span>
           {:else}
             <Store size={18} class="shrink-0 text-gray-400" />
@@ -181,7 +181,7 @@
                 class="w-full flex items-center justify-between px-5 py-2.5 text-left hover:bg-gray-50 transition-colors text-sm font-semibold text-gray-700 {selectedStore === storeOption ? 'bg-gray-50' : ''}"
               >
                 <div class="flex items-center gap-3">
-                  <StoreLogo store={storeOption} class="h-6 w-auto max-w-[48px] rounded-md shadow-sm shrink-0" />
+                  <StoreLogo store={storeOption} class="w-6 h-6 rounded-md shadow-sm shrink-0" />
                   <span>{storeOption}</span>
                 </div>
                 {#if selectedStore === storeOption}
