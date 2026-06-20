@@ -7,15 +7,15 @@
     if (!name) return null;
     switch (name) {
       case 'Albert Heijn':
-        return '/images/stores/albert_heijn.svg';
+        return '/images/stores/albert_heijn.png';
       case 'Colruyt':
         return '/images/stores/colruyt.svg';
       case 'Aldi':
-        return '/images/stores/aldi.svg';
+        return '/images/stores/aldi.png';
       case 'Lidl':
         return '/images/stores/lidl.svg';
       case 'Delhaize':
-        return '/images/stores/delhaize.svg';
+        return '/images/stores/delhaize.png';
       case 'Carrefour':
         return '/images/stores/carrefour.svg';
       default:
