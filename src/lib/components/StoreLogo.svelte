@@ -13,7 +13,7 @@
       case 'Aldi':
         return '/images/stores/aldi.png';
       case 'Lidl':
-        return '/images/stores/lidl.svg';
+        return '/images/stores/lidl.png';
       case 'Delhaize':
         return '/images/stores/delhaize.png';
       case 'Carrefour':
